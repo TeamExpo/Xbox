@@ -1,8 +1,10 @@
 local SelectionBox = Instance.new("SelectionBox",workspace)
 SelectionBox.LineThickness = 0.02
 SelectionBox.Transparency = 0.1
+
 local LPlayer = game.Players.LocalPlayer
-local Mouse = LPlayer:GetMouse()
+local mouse = LPlayer:GetMouse()
+local selectedfire
 local aimbotenabled = false
 local aimbottarget
 local UIS = game:GetService("UserInputService")
@@ -79,8 +81,7 @@ if input.KeyCode == Enum.KeyCode.ButtonL2 then
 		    end
 		end
 	end)
-local mouse = LPlayer:GetMouse()
-local selectedfire
+
 LPlayer.CharacterAdded:Connect(function(character)
 	character.ChildAdded:Connect(function(child)
 	    if child:IsA("Tool") then
