@@ -17,11 +17,10 @@ local UIS = game:GetService("UserInputService")
 
 
 UIS.InputBegan:Connect(function(input,proc)
-if input.KeyCode == Enum.KeyCode.E then
+if input.KeyCode == Enum.KeyCode.ButtonL2 then
 			local plr = ms2plr()
 			if plr and plr ~= LPlayer then
 				aimbottarget = plr
-				script.Parent.Stats.Target.Text = "Target: "..plr.Name
 				notification("Target: "..plr.Name)
 				if plr.Character then
 					if plr.Character:FindFirstChild("Torso") then
@@ -43,11 +42,8 @@ if input.KeyCode == Enum.KeyCode.E then
 		end
 
 
-	if input.KeyCode == Enum.KeyCode.B then
+	if input.KeyCode == Enum.KeyCode.ButtonX then
 			aimbotenabled = not aimbotenabled
-			if not aimbottarget then
-				script.Parent.Stats.Target.Text = "Aimbot: "..tostring(aimbotenabled)
-			end
 			notification("Aimbot: "..tostring(aimbotenabled))
 			local tool = LPlayer.Character:FindFirstChildOfClass("Tool")
 			if tool then
