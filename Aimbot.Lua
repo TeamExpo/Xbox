@@ -10,33 +10,44 @@ function notification(text)
     })
 end
 local LPlayer = game.Players.LocalPlayer
-local mouse = LPlayer:GetMouse()
+local Mouse = LPlayer:GetMouse()
 local aimbotenabled = false
 local aimbottarget
 local UIS = game:GetService("UserInputService")
-local visible = false
-local gui = script.Parent
-function ms2plr()
-	local ms = LPlayer:GetMouse()
-	local plr
-    local closest = 25
-    for i,v in pairs(game.Players:GetPlayers()) do
-		if v.Character then
-			local root = v.Character:FindFirstChild("HumanoidRootPart") or v.Character:FindFirstChild("Torso")
-			if root then
-				if (root.Position - Vector3.new(ms.Hit.X,ms.Hit.Y,ms.Hit.Z)).Magnitude < closest then
-					closest = (root.Position - Vector3.new(ms.Hit.X,ms.Hit.Y,ms.Hit.Z)).Magnitude
-					plr = v
+
+
+UIS.InputBegan:Connect(function(input,proc)
+if input.KeyCode == Enum.KeyCode.E then
+			local plr = ms2plr()
+			if plr and plr ~= LPlayer then
+				aimbottarget = plr
+				script.Parent.Stats.Target.Text = "Target: "..plr.Name
+				notification("Target: "..plr.Name)
+				if plr.Character then
+					if plr.Character:FindFirstChild("Torso") then
+						SelectionBox.Adornee = plr.Character.Torso
+					end
 				end
+				local connection = {}
+				table.insert(connection,plr.CharacterAdded:Connect(function(ch)
+					wait(0.1)
+					if plr.Character:FindFirstChild("Torso") then
+						SelectionBox.Adornee = plr.Character.Torso
+					end
+				end))
+				spawn(function()
+					repeat wait() until aimbottarget ~= plr
+					connection[1]:Disconnect()
+				end)
 			end
 		end
-    end
-	return plr
-end
-UIS.InputBegan:Connect(function(input,proc)
-	
-		if input.KeyCode == Enum.KeyCode.ButtonX then
+
+
+	if input.KeyCode == Enum.KeyCode.B then
 			aimbotenabled = not aimbotenabled
+			if not aimbottarget then
+				script.Parent.Stats.Target.Text = "Aimbot: "..tostring(aimbotenabled)
+			end
 			notification("Aimbot: "..tostring(aimbotenabled))
 			local tool = LPlayer.Character:FindFirstChildOfClass("Tool")
 			if tool then
@@ -55,29 +66,12 @@ UIS.InputBegan:Connect(function(input,proc)
 		        end
 		    end
 		end
-	
-	
-	
-		if input.KeyCode == Enum.KeyCode.ButtonL2 then
-		local plr = ms2plr()
-			if plr and plr ~= LPlayer then
-				aimbottarget = plr
-				notification("Target: "..plr.Name)
-				if plr.Character.Torso then
-						SelectionBox.Adornee = plr.Character.Torso
-				end
-				local connection = {}
-				table.insert(connection,plr.CharacterAdded:Connect(function(ch)
-					wait(0.1)
-						SelectionBox.Adornee = plr.Character.Torso
-				end))
-				spawn(function()
-					repeat wait() until aimbottarget ~= plr
-					connection[1]:Disconnect()
-				end)
-			end	
-end
+	end)
+
 end)
+
+
+
 local mouse = LPlayer:GetMouse()
 local selectedfire
 LPlayer.CharacterAdded:Connect(function(character)
@@ -116,4 +110,22 @@ end)
 mouse.Button1Up:Connect(function()
     held = false
 end)
-SelectionBox.Color3 = Color3.fromHSV(zigzag(counter),1,1)
+
+local counter = 0
+function zigzag(X) return math.acos(math.cos(X*math.pi))/math.pi end
+game:GetService("RunService").Stepped:Connect(function()
+	pcall(function()
+		counter = counter+0.001
+		SelectionBox.Color3 = Color3.fromHSV(zigzag(counter),1,1)
+		local x = (workspace.CurrentCamera.CoordinateFrame.p - LPlayer.Character.Head.Position).magnitude
+		if x < 1 then
+			local character = LPlayer.Character
+			for i, v in pairs(character:GetChildren()) do
+				if v.Name ~= "Head" and v.Name ~= "HumanoidRootPart" and v:IsA("BasePart") then
+				v.LocalTransparencyModifier = 0
+				end
+			end
+		end
+	end)
+end)
+
