@@ -80,8 +80,6 @@ if input.KeyCode == Enum.KeyCode.ButtonL2 then
 		end
 	end)
 
-end)
-
 
 
 local mouse = LPlayer:GetMouse()
