@@ -1,6 +1,11 @@
 local SelectionBox = Instance.new("SelectionBox",workspace)
 SelectionBox.LineThickness = 0.02
 SelectionBox.Transparency = 0.1
+local LPlayer = game.Players.LocalPlayer
+local Mouse = LPlayer:GetMouse()
+local aimbotenabled = false
+local aimbottarget
+local UIS = game:GetService("UserInputService")
 function notification(text)
 	game.StarterGui:SetCore("SendNotification", {
     Title = "XBOX SYSTEM";
@@ -9,13 +14,7 @@ function notification(text)
     Duration = 1;
     })
 end
-local LPlayer = game.Players.LocalPlayer
-local Mouse = LPlayer:GetMouse()
-local aimbotenabled = false
-local aimbottarget
-local UIS = game:GetService("UserInputService")
-
-
+print'new'
 UIS.InputBegan:Connect(function(input,proc)
 if input.KeyCode == Enum.KeyCode.ButtonL2 then
 			local plr = ms2plr()
@@ -113,15 +112,6 @@ game:GetService("RunService").Stepped:Connect(function()
 	pcall(function()
 		counter = counter+0.001
 		SelectionBox.Color3 = Color3.fromHSV(zigzag(counter),1,1)
-		local x = (workspace.CurrentCamera.CoordinateFrame.p - LPlayer.Character.Head.Position).magnitude
-		if x < 1 then
-			local character = LPlayer.Character
-			for i, v in pairs(character:GetChildren()) do
-				if v.Name ~= "Head" and v.Name ~= "HumanoidRootPart" and v:IsA("BasePart") then
-				v.LocalTransparencyModifier = 0
-				end
-			end
-		end
 	end)
 end)
 
