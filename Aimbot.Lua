@@ -78,6 +78,27 @@ UIS.InputBegan:Connect(function(input,proc)
 			end	
 end
 end)
+local mouse = LPlayer:GetMouse()
+local selectedfire
+LPlayer.CharacterAdded:Connect(function(character)
+	character.ChildAdded:Connect(function(child)
+	    if child:IsA("Tool") then
+	        local fire = child:FindFirstChild("Fire")
+	        if fire then
+	            child:FindFirstChild("LocalScript").Disabled = true
+	            selectedfire = child.Fire
+	            local idle = character.Humanoid:LoadAnimation(child.Idle)
+	            idle:Play()
+	            local connection = {}
+	            table.insert(connection,child.Unequipped:Connect(function()
+	                idle:Stop()
+	                selectedfire = nil
+	                for i,v in pairs(connection) do v:Disconnect() end
+	            end))
+	        end
+	    end
+	end)
+end)
 local held = false
 mouse.Button1Down:Connect(function()
     if selectedfire then
@@ -95,3 +116,4 @@ end)
 mouse.Button1Up:Connect(function()
     held = false
 end)
+SelectionBox.Color3 = Color3.fromHSV(zigzag(counter),1,1)
