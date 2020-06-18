@@ -14,6 +14,23 @@ function notification(text)
     Duration = 1;
     })
 end
+function ms2plr()
+	local ms = LPlayer:GetMouse()
+	local plr
+    local closest = 25
+    for i,v in pairs(game.Players:GetPlayers()) do
+		if v.Character then
+			local root = v.Character:FindFirstChild("HumanoidRootPart") or v.Character:FindFirstChild("Torso")
+			if root then
+				if (root.Position - Vector3.new(ms.Hit.X,ms.Hit.Y,ms.Hit.Z)).Magnitude < closest then
+					closest = (root.Position - Vector3.new(ms.Hit.X,ms.Hit.Y,ms.Hit.Z)).Magnitude
+					plr = v
+				end
+			end
+		end
+    end
+	return plr
+end
 print'new'
 UIS.InputBegan:Connect(function(input,proc)
 if input.KeyCode == Enum.KeyCode.ButtonL2 then
